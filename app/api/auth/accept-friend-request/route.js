@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { connectDb } from "../../../lib/connectDB";
 import User from "../../../models/User";
 export async function POST(req) {
-  //req will have senderId in body
+  //req will have senderId(senderId) in body
   const session = await getServerSession(authOptions);
   if (
     !session?.user?._id ||
@@ -32,9 +32,9 @@ export async function POST(req) {
         { status: 400 }
       );
     }
-    const potentialFriendId = mongoose.Types.ObjectId(session.user._id);
+    const potentialFriendId = mongoose.Types.ObjectId(potentialFriendIdtemp);
     //check if the user is already friends with potentialFriend
-    const isFriend = user.friends.some((obj) =>
+    const isFriend = user.friends?.some((obj) =>
       obj.friendId.equals(potentialFriendId)
     );
     if (isFriend) {
