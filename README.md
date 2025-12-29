@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Code With Friends
 
-## Getting Started
+Lightweight Next.js app for connecting friends and sending friend requests.
 
-First, run the development server:
+## Current Status
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Project scaffolded:** Next.js (App Router) project created.
+- **Layout & styles:** Basic layout and global styles implemented.
+- **Database connector:** `lib/connectDB.js` added to handle DB connection.
+- **API routes:** Friend-request related endpoints implemented under `app/api/auth`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## What’s implemented (files/folders)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- **App root:** [app/layout.js](app/layout.js#L1) — global layout.
+- **Home page:** [app/page.js](app/page.js#L1) — main landing page.
+- **Global styles:** [app/globals.css](app/globals.css#L1).
+- **API — auth:**
+  - [app/api/auth/accept-request/route.js](app/api/auth/accept-request/route.js#L1)
+  - [app/api/auth/send-friend-request/route.js](app/api/auth/send-friend-request/route.js#L1)
+- **DB helper:** [lib/connectDB.js](lib/connectDB.js#L1)
+- **Public assets:** `public/` (static files)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Notes / Next steps
 
-## Learn More
+- Wire up `lib/connectDB.js` to a real database (e.g., MongoDB) and add environment config.
+- Add authentication/session handling and users model.
+- Expand API tests and client-side integration for friend requests.
 
-To learn more about Next.js, take a look at the following resources:
+## How to run (local)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Install deps: `npm install`
+2. Run dev server: `npm run dev`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+(Adjust environment variables for DB/auth before connecting to a real database.)
