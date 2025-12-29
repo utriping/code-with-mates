@@ -1,4 +1,4 @@
-import Notification from "@/models/Notification";
+import Notification from "@/models/Notification.model.js";
 import mongoose from "mongoose";
 
 export default async function SendingNotificationHandler(
