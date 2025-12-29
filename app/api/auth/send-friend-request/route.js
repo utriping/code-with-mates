@@ -95,5 +95,11 @@ export async function POST(req) {
       },
     });
     return NextResponse.json({ message: "Friend request sent successfully" });
-  } catch (err) {}
+  } catch (err) {
+    console.error("Error in sending friend request: ", err);
+    return NextResponse.json(
+      { success: false, error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
 }
