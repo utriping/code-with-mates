@@ -80,35 +80,36 @@ export async function POST(req) {
         { status: 400 }
       );
     }
-    const isFriend = user.friends.some(
-      (obj) => obj.friendId.equals(postentialFriend._id)
-      //[{friendId: ObjectId("...")}, {...}]
-    );
-    if (isFriend) {
-      return NextResponse.json(
-        { message: "That user is already your friend" },
-        { status: 400 }
-      );
-    }
-    const isPendingRequest = user.pendingSentRequests.some((obj) =>
-      obj.friendId.equals(postentialFriend._id)
-    );
+    // const isFriend = user.friends.some(
+    //   (obj) => obj.friendId.equals(postentialFriend._id)
+    //   //[{friendId: ObjectId("...")}, {...}]
+    // );
+    // if (isFriend) {
+    //   return NextResponse.json(
+    //     { message: "That user is already your friend" },
+    //     { status: 400 }
+    //   );
+    // }
+    // const isPendingRequest = user.pendingSentRequests.some((obj) =>
+    //   obj.friendId.equals(postentialFriend._id)
+    // );
 
-    const isReceivedRequest = postentialFriend.pendingReceivedRequests.some(
-      (obj) => obj.friendId.equals(user._id)
-    );
+    // const isReceivedRequest = postentialFriend.pendingReceivedRequests.some(
+    //   (obj) => obj.friendId.equals(user._id)
+    // );
 
     const newFriendRequest = await FriendRequest.create({
       senderId: userId,
       receiverId: postentialFriend._id,
     });
 
-    if (isPendingRequest || isReceivedRequest) {
-      return NextResponse.json(
-        { message: "You have already sent a friend request to this user" },
-        { status: 400 }
-      );
-    }
+    // if (isPendingRequest || isReceivedRequest) {
+    //   return NextResponse.json(
+    //     { message: "You have already sent a friend request to this user" },
+    //     { status: 400 }
+    //   );
+    // }
+
     //send email logic can be added here
     //send notification logic can be added here
     const notification = await SendingNotificationHandler(
@@ -117,16 +118,16 @@ export async function POST(req) {
       userId
     );
 
-    await User.findByIdAndUpdate(userId, {
-      $push: {
-        pendingSentRequests: postentialFriend._id,
-      },
-    });
-    await User.findByIdAndUpdate(postentialFriend._id, {
-      $push: {
-        friendRequests: session.user._id,
-      },
-    });
+    // await User.findByIdAndUpdate(userId, {
+    //   $push: {
+    //     pendingSentRequests: postentialFriend._id,
+    //   },
+    // });
+    // await User.findByIdAndUpdate(postentialFriend._id, {
+    //   $push: {
+    //     friendRequests: session.user._id,
+    //   },
+    // });
     return NextResponse.json(
       { message: "Friend request sent successfully", notification },
       { status: 200 }

@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { connectDb } from "../../../lib/connectDB";
 import User from "../../../models/User";
+import FriendRequest from "@/models/FriendRequest.model";
 export async function POST(req) {
   //req will have senderId(senderId) in body
   const session = await getServerSession(authOptions);
@@ -57,18 +58,32 @@ export async function POST(req) {
         friends: { friendId: potentialFriend._id },
       },
     });
-    // Remove the friend request from the user's pending received requests
-    await User.findByIdAndUpdate(userId, {
-      $pull: {
-        pendingReceivedRequests: potentialFriend._id,
-      },
-    });
-    // Remove the friend request from the potential friend's pending sent requests
+
+    // Add the user to the potential friend's friends list
     await User.findByIdAndUpdate(potentialFriend._id, {
-      $pull: {
-        pendingSentRequests: userId,
+      $push: {
+        friends: { friendId: userId },
       },
     });
+    //delete friend request document
+    await FriendRequest.deleteOne({
+      senderId: potentialFriend._id,
+      receiverId: userId,
+    });
+    // Remove the friend request from the user's pending received requests
+    // if (user.pendingReceivedRequests.includes(potentialFriend._id)) {
+    //   await User.findByIdAndUpdate(userId, {
+    //     $pull: {
+    //       pendingReceivedRequests: potentialFriend._id,
+    //     },
+    //   });
+    // }
+    // Remove the friend request from the potential friend's pending sent requests
+    // await User.findByIdAndUpdate(potentialFriend._id, {
+    //   $pull: {
+    // pendingSentRequests: userId,
+    //   },
+    // });
     return NextResponse.json(
       { success: true, message: "Friend request accepted" },
       { status: 200 }
