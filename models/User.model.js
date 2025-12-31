@@ -38,11 +38,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    avatarUrl: {
+    avatar: {
       type: String,
       default: "",
     },
-    coverPhotoUrl: {
+    coverPhoto: {
       type: String,
       default: "",
     },

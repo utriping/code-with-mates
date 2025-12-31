@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
-import { connectDb } from "../../../lib/connectDB";
-import User from "../../../models/User";
+import { connectDb } from "@/lib/connectDB";
+import User from "@/models/User";
 import FriendRequest from "@/models/FriendRequest.model";
+
 export async function POST(req) {
   //req will have senderId(senderId) in body
   const session = await getServerSession(authOptions);
