@@ -114,8 +114,7 @@ export async function POST(req) {
     //send notification logic can be added here
     const notification = await SendingNotificationHandler(
       `You have received a friend request from ${user.name}`,
-      postentialFriend._id,
-      userId
+      postentialFriend._id
     );
 
     // await User.findByIdAndUpdate(userId, {
