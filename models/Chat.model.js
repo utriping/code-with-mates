@@ -7,6 +7,12 @@ const chatSchema = new mongoose.Schema({
       ref: "Message",
     },
   ],
+  receiverType: {
+    type: String,
+    enum: ["user", "group"],
+    required: true,
+  },
+  
 });
 const Chat = mongoose.models.Chat || mongoose.model("Chat", chatSchema);
 export default Chat;
