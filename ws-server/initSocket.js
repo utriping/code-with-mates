@@ -10,6 +10,8 @@ export default function initSocket(server) {
   });
   //
   io.on("connection", (socket) => {
+    console.log(socket);
+    
     console.log("a user connected");
 
     socket.on("send message", (msg) => {
@@ -21,3 +23,9 @@ export default function initSocket(server) {
     });
   });
 }
+export const getIo = () => {
+  if (!io) {
+    throw new Error("Socket.io not initialized");
+  }
+  return io;
+};
