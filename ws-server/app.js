@@ -24,4 +24,7 @@ initSocket(server);
 //     getIo().to(friendId).emit("received message", message);
 //     res.status(200).json({ message: "Message sent successfully" });
 // });
+
+
+
 server.listen(4000, () => console.log("listening on port 4000"));
