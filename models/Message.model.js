@@ -29,6 +29,10 @@ const messageSchema = new mongoose.Schema({
     enum: ["user", "group"],
     required: true,
   },
+  isSeen: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Message =

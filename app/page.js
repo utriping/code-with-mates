@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 //generate a test chat frontend
 import { io } from "socket.io-client";
+//write exact status code in case of checking 400 status codes (when refreshing tokens)
 export default function Home() {
   const [messages, setMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");

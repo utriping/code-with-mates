@@ -39,6 +39,7 @@ export default function initSocket(server) {
           content: msg,
           receiverType: `${receiverType}`,
           createdAt: new Date(),
+          isSeen: false,
         });
         if (!message) throw new Error("Failed to send message");
         const safeMessage = message.toObject();
