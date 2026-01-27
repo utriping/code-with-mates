@@ -22,12 +22,10 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     friends: [
-      //an array of objects containing friendId(ObjectId of User)
+      //an array of objects containing friends(ObjectId of User)
       {
-        friendId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
       },
     ],
     pendingSentRequests: [

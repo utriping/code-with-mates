@@ -32,3 +32,5 @@ Lightweight Next.js app for connecting friends and sending friend requests.
 2. Run dev server: `npm run dev`
 
 (Adjust environment variables for DB/auth before connecting to a real database.)
+
+Currently working on chat functionality and proper handling of required routes.
