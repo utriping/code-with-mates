@@ -42,3 +42,6 @@ const groupSchema = mongoose.Schema({
     required: true,
   },
 });
+
+const Group = mongoose.models.Group || mongoose.model("Group", groupSchema);
+export default Group;

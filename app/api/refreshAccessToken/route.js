@@ -1,9 +1,12 @@
+//tested and working
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import User from "@/models/User.model";
-export async function POST(req) {
-  const cookies = cookies();
-  const refreshToken = cookies.get("refreshToken")?.value;
+import { cookies } from "next/headers";
+import { connectDb } from "@/lib/connectDB";
+export async function GET() {
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get("refresh-token")?.value;
   if (!refreshToken) {
     return NextResponse.json(
       { success: false, error: "User is not authorized" },
@@ -13,8 +16,9 @@ export async function POST(req) {
     );
   }
   try {
+    await connectDb();
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-    const user = User.findById(decoded?._id);
+    const user = await User.findById(decoded?._id);
     if (!user) {
       return NextResponse.json(
         { success: false, error: "Invalid user" },
@@ -25,7 +29,7 @@ export async function POST(req) {
     }
     if (refreshToken !== user.refreshToken) {
       return NextResponse.json(
-        { success: false, error: "User is not authorized" },
+        { success: false, error: "Invalid refresh token" },
         {
           status: 403,
         },
@@ -56,10 +60,11 @@ export async function POST(req) {
     response.cookies.set("access-token", newAccessToken, options);
     return response;
   } catch (err) {
+    console.log("Error in refreshing access token: ", err);
     return NextResponse.json(
       {
         success: false,
-        error: "User is not authorized and has to sign in again",
+        error: "User is not authorized and has to sign in again" + err.message,
       },
       {
         status: 403,

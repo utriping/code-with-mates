@@ -24,7 +24,6 @@ export default function initSocket(server) {
     }
   });
   io.on("connection", (socket) => {
-    console.log(socket);
     console.log("a user connected");
 
     socket.on("join room", (chatId) => {
@@ -45,13 +44,13 @@ export default function initSocket(server) {
         const safeMessage = message.toObject();
         delete safeMessage._id;
         delete safeMessage.__v;
-        io.to(chatId).emit("received message", message);
+        io.to(chatId).emit("received message", safeMessage);
       } catch (err) {
         io.to(chatId).emit("received message", { message: err.message });
       }
     });
     socket.on("typing", (chatId) => {
-      socket.to(chatId).emit("user_typing", socket.user.id);
+      socket.to(chatId).emit("user_typing", socket.user._id);
     });
 
     socket.on("disconnect", () => {

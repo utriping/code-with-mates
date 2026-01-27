@@ -63,7 +63,6 @@ const userSchema = new mongoose.Schema(
     },
     refreshToken: {
       type: String,
-      required: true,
     },
     //the state could be any of the three: online, offline, busy
     //what is enum? enum is a special type that allows only specific values

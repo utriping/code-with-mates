@@ -1,8 +1,9 @@
+//tested and working
 import { connectDb } from "@/lib/connectDB";
 import User from "@/models/User.model";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
-
+import bcrypt from "bcryptjs";
 //avatar, coverphoto,bio feature not added all this will be in profile creation route
 export async function POST(req) {
   //req me username, password aayega jo user form bharega aur name field me rahega sab
@@ -26,10 +27,11 @@ export async function POST(req) {
       $or: [{ username }, { email }],
     });
     if (existingUser) {
+      console.log(existingUser);
       return NextResponse.json(
         {
           success: false,
-          error: "User alreay exists",
+          error: `User already exists, ${existingUser.username === username ? "username" : "email"} is taken`,
         },
         { status: 409 },
       );
@@ -41,7 +43,8 @@ export async function POST(req) {
       password: hashedPassword,
       email: email,
     });
-    const createdUser = user.select("-password -refreshToken");
+    const createdUser = user.toObject();
+    delete createdUser.password;
     return NextResponse.json(
       { success: true, message: "User has been created", data: createdUser },
       {
@@ -50,9 +53,12 @@ export async function POST(req) {
     );
   } catch (err) {
     return NextResponse.json(
-      { error: "Something went wrong while creating the user", status: 500 },
       {
+        error: err.message,
         success: false,
+      },
+      {
+        status: 500,
       },
     );
   }
