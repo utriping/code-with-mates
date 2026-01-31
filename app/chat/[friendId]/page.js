@@ -21,17 +21,14 @@ export default function ChatPage() {
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const data = await api
-          .post(
-            "/api/auth/get-friends",
-            // {friendId}).then((res)=>{
-            // if(res.status>=400)
-            // }
-            { friendId },
-          )
-          .then((res) => res.json());
+        const res = await api.post("/auth/get-friends", { friendId });
+        const data = res.data.friends;
         setFriends(data);
       } catch (error) {
+        if(error.status>= 400){
+          //handle unauthorized
+          
+        }
         console.error("[v0] Error fetching friends:", error);
       } finally {
         setLoading(false);

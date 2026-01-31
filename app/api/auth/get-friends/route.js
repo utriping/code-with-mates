@@ -11,15 +11,13 @@ export async function POST(req) {
   try {
     await connectDb();
     const cookieStore = await cookies();
-    const accessToken = cookieStore.get("access-token")?.value || null;
-    if (!accessToken) {
+    const { valid, decoded } = checkTokens(cookieStore);
+    if (!valid) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
         { status: 401 },
       );
     }
-    const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET);
-
     const user = await User.findById(decoded?._id);
     if (!user) {
       return NextResponse.json(
