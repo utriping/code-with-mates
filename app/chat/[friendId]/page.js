@@ -29,7 +29,7 @@ export default function ChatPage() {
           //handle unauthorized
           
         }
-        console.error("[v0] Error fetching friends:", error);
+        console.error("Error fetching friends:", error);
       } finally {
         setLoading(false);
       }
@@ -51,7 +51,7 @@ export default function ChatPage() {
       // Mark as read
       await apiClient.markMessagesAsRead(selectedFriendId);
     } catch (error) {
-      console.error("[v0] Error fetching messages:", error);
+      console.error("Error fetching messages:", error);
     }
   };
 
@@ -71,7 +71,7 @@ export default function ChatPage() {
         payload: newMessage,
       });
     } catch (error) {
-      console.error("[v0] Error sending message:", error);
+      console.error("Error sending message:", error);
     }
   };
 

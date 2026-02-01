@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-export function middleware(request) {
-  const cookieStore = cookies();
+export async function proxy(request) {
+  const cookieStore = await cookies();
   const accessToken = cookieStore.get("access-token")?.value;
   const refreshToken = cookieStore.get("refresh-token")?.value;
 
@@ -43,5 +43,10 @@ export function middleware(request) {
 
 // 6️⃣ Protect only specific routes
 export const config = {
-  matcher: ["/dashboard/:path*", "/profile/:path*", "/api/auth/:path*", "/chat/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/profile/:path*",
+    "/api/auth/:path*",
+    "/chat/:path*",
+  ],
 };

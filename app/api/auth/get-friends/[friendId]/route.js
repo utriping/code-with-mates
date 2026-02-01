@@ -6,8 +6,8 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 //friendId milega req me
 //If reached here access token must be valid so no need to verify again
-export async function POST(req) {
-  const { friendId } = await req.json();
+export async function GET(req, { params }) {
+  const { friendId } = params;
   try {
     await connectDb();
     const cookieStore = await cookies();
