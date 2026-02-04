@@ -17,7 +17,15 @@ export async function GET() {
   }
   try {
     await connectDb();
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    try{
+      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    }
+    catch(err){
+      return NextResponse.json(
+        { success: false, error: "Invalid refresh token" },
+        { status: 403 },
+      );  
+    }
     const user = await User.findById(decoded?._id);
     if (!user) {
       return NextResponse.json(

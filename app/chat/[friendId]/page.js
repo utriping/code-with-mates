@@ -6,10 +6,11 @@ import { ChatFriendsList } from "@/components/chat/chat-friends-list";
 import { ChatWindow } from "@/components/chat/chat-window";
 import { apiClient } from "@/lib/api-client";
 import { useAppContext } from "@/providers/app-provider";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import api from "@/lib/axiosRequestConfig";
 export default function ChatPage() {
   const { friendId } = useParams();
+  const router = useRouter();
   const [friends, setFriends] = useState([]);
   const [selectedFriendId, setSelectedFriendId] = useState(friendId);
   const [messages, setMessages] = useState([]);
@@ -21,15 +22,20 @@ export default function ChatPage() {
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const res = await api.post("/auth/get-friends", { friendId });
+        const res = await api.get(`/auth/get-friends/${friendId}`);
         const data = res.data.friends;
         setFriends(data);
       } catch (error) {
-        if(error.status>= 400){
+        if (error.response?.status >= 400) {
           //handle unauthorized
-          
+          const res = await api.get("/refreshAccessToken");
+          if (res.status === 201) {
+            fetchFriends();
+          } else {
+            console.error("Unauthorized. Please log in again.");
+            router.push("/login");
+          }
         }
-        console.error("Error fetching friends:", error);
       } finally {
         setLoading(false);
       }

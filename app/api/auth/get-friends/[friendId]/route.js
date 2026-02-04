@@ -1,9 +1,11 @@
+//not tested yet but seems fine
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import User from "@/models/User.model";
 import connectDb from "@/lib/connectDB";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
+import checkTokens from "@/lib/checkTokens";
 //friendId milega req me
 //If reached here access token must be valid so no need to verify again
 export async function GET(req, { params }) {
