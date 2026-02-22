@@ -3,9 +3,8 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
 export async function proxy(request) {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("access-token")?.value;
-  const refreshToken = cookieStore.get("refresh-token")?.value;
+  const refreshToken = request.cookies.get("refresh-token")?.value;
+  const accessToken = request.cookies.get("access-token")?.value;
 
   const { pathname } = request.nextUrl;
 
@@ -16,13 +15,7 @@ export async function proxy(request) {
   }
 
   // 2️⃣ No access token at all
-  if (!accessToken) {
-    // refresh token exists → client will call refresh
-    if (refreshToken) {
-      return NextResponse.next();
-    }
-
-    // no tokens → redirect to login
+  if (!accessToken && !refreshToken) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -32,12 +25,20 @@ export async function proxy(request) {
     return NextResponse.next();
   } catch (err) {
     // 4️⃣ Access token expired
-    if (err.name === "TokenExpiredError" && refreshToken) {
+    try {
+      jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+      //access token expired but refresh token valid
+      //here new access token needs to be issued
+      await fetch(new URL("/api/refreshAccessToken", request.url), {
+        method: "POST",
+        headers: {
+          Cookie: request.headers.get("cookie") || "",
+        },
+      });
       return NextResponse.next();
+    } catch (err) {
+      return NextResponse.redirect(new URL("/login", request.url));
     }
-
-    // 5️⃣ Invalid token → force login
-    return NextResponse.redirect(new URL("/login", request.url));
   }
 }
 

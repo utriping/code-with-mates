@@ -2,19 +2,34 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import authStore from "@/lib/authStore";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   const router = useRouter();
+  const setUserData = authStore((state) => state.signIn);
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const res = await api.get("/me");
+        const userDetails = res.data;
+        setUserData(userDetails);
+      } catch (err) {}
+    };
+    fetchUserDetails();
+  }, []);
 
   // useEffect(() => {
   //   router.push("/dashboard");
   // }, [router]);
 
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold">Redirecting...</h1>
-      </div>
-    </div>
-  );
+  return <Navbar />;
 }

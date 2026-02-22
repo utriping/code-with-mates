@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import User from "@/models/User.model";
 import { cookies } from "next/headers";
 import { connectDb } from "@/lib/connectDB";
-export async function GET() {
+export async function POST() {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get("refresh-token")?.value;
   if (!refreshToken) {
@@ -17,14 +17,14 @@ export async function GET() {
   }
   try {
     await connectDb();
-    try{
-      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-    }
-    catch(err){
+    let decoded;
+    try {
+      decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    } catch (err) {
       return NextResponse.json(
         { success: false, error: "Invalid refresh token" },
         { status: 403 },
-      );  
+      );
     }
     const user = await User.findById(decoded?._id);
     if (!user) {
@@ -52,20 +52,24 @@ export async function GET() {
       },
       process.env.JWT_ACCESS_SECRET,
       {
-        expiresIn: "15m",
+        expiresIn: "30m",
       },
     );
     const options = {
       httpOnly: true,
       secure: false,
     };
+
     const response = NextResponse.json(
-      { success: true, message: "Access token refreshed successfully" },
+      {
+        success: true,
+        message: "Access token refreshed successfully",
+      },
       {
         status: 201,
       },
     );
-    response.cookies.set("access-token", newAccessToken, options);
+    response.cookies.set("access-token", options);
     return response;
   } catch (err) {
     console.log("Error in refreshing access token: ", err);

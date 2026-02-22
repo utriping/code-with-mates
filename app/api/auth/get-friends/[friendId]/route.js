@@ -8,19 +8,19 @@ import jwt from "jsonwebtoken";
 import checkTokens from "@/lib/checkTokens";
 //friendId milega req me
 //If reached here access token must be valid so no need to verify again
-export async function GET(req, { params }) {
-  const { friendId } = params;
+export async function GET(req) {
   try {
     await connectDb();
     const cookieStore = await cookies();
-    const { valid, decoded } = checkTokens(cookieStore);
+    const { valid, decoded, accessToken, refreshToken } =
+      checkTokens(cookieStore);
     if (!valid) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
         { status: 401 },
       );
     }
-    const user = await User.findById(decoded?._id);
+    const user = await User.findById(decoded?._id).select("friends refreshToken");
     if (!user) {
       return NextResponse.json(
         { success: false, error: "Invalid user" },
